@@ -1,9 +1,20 @@
 'use client'
 
-import { IconType } from 'react-icons';
+import { IconType } from 'react-icons'
 
-export default function IconButton({ Icon, callback }: { Icon: IconType, callback: Function }) {
-    return <button onClick={(e) => callback(e)}>
-        <Icon />
-    </button>
+type props = {
+    Icon: IconType,
+    callback: Function,
+    title?: string,
+    size?: number,
+    color?: string,
+    className?: string
+}
+
+export default function IconButton({ Icon, callback, title, size, color, className }: props) {
+    return (
+        <button title={title} onClick={(e) => callback(e)} className={className}>
+            <Icon size={(size ? size : '1') + 'em'} color={color} />
+        </button>
+    )
 }

@@ -5,11 +5,25 @@ export type Note = {
   user_id: ObjectId
   title: string
   items: Item[]
-  created: string
+  created: Date
+}
+
+export type SimpleNote = {
+  _id: string
+  user_id: string
+  title: string
+  items: SimpleItem[]
+  created: Date
 }
 
 export type Item = {
-  id: number
+  _id: ObjectId
+  content: string
+  checked: boolean
+}
+
+export type SimpleItem = {
+  _id: string
   content: string
   checked: boolean
 }

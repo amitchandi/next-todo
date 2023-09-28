@@ -27,5 +27,7 @@
 } */
 
 body {
-  background-color: grey;
+  background-color: shit;
+  /* background-image: url('http://localhost:3000/background.jpg'); */
+  background-image: url('/background.jpg');
 }
