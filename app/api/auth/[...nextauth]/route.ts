@@ -1,7 +1,7 @@
-import NextAuth, { NextAuthOptions, RequestInternal } from 'next-auth'
+import NextAuth, { Awaitable, NextAuthOptions, User } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GithubProvider from 'next-auth/providers/github'
-import { MongoClient, WithId } from 'mongodb'
+import { MongoClient } from 'mongodb'
 import bcrypt from 'bcrypt'
 
 export const authOptions: NextAuthOptions = {
@@ -9,18 +9,18 @@ export const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                username: { label: "Username", type: "text", placeholder: "jsmith" },
+                username: { label: "email", type: "email", placeholder: "jsmith@domain.com" },
                 password: { label: "Password", type: "password" }
             },
-            authorize: async function (credentials: any, req: Pick<RequestInternal, "body" | "query" | "headers" | "method">): Promise<any> {
+            authorize: async function (credentials: any) {
                 // Add logic here to look up the user from the credentials supplied
 
                 const result = await validateCredentals(credentials.username, credentials.password)
-
-                if (!result.valid)
+                
+                if (!result)
                     return null
 
-                return result.user
+                return result
             }
         }),
         GithubProvider({
@@ -42,8 +42,10 @@ export const authOptions: NextAuthOptions = {
         },
         async session({ session, token, user }) {
             // Send properties to the client, like an access_token and user id from a provider.
-            if (token.provider === 'github')
+            if (token.provider === 'github' || token.provider === 'credentials')
                 (session as any).user_id = token.sub;
+            //need to grab userid from mongodb and store
+            // console.log(session, token, user)
             return session
         }
     }
@@ -51,33 +53,27 @@ export const authOptions: NextAuthOptions = {
 
 const handler = NextAuth(authOptions)
 
-type ValidationResults = {
-    valid: boolean,
-    user?: any
-}
-
-async function validateCredentals(username: string, password: string): Promise<ValidationResults> {
+async function validateCredentals(email: string, password: string): Promise<User | undefined> {
     const client = new MongoClient(process.env.uri || 'mongodb://127.0.0.1:27017')
     try {
         const database = client.db('notes_app')
         const users = database.collection('users')
-        const query = { username }
+        const query = { email }
         const result = await users.findOne(query)
+        
         if (!result)
-            return { valid: false }
+            return
         else {
             var match = await bcrypt.compare(password, result.password)
-            if (match)
-                return {
-                    valid: true,
-                    user: result
+            if (match) {
+                return  {
+                    id: result._id.toJSON(),
+                    email: result.email,
                 }
-            else
-                return { valid: false }
+            }
         }
     } catch (err) {
         console.log(err)
-        return { valid: false }
     } finally {
         await client.close()
     }
