@@ -1,6 +1,7 @@
-import NextAuth, { Awaitable, NextAuthOptions, User } from 'next-auth'
+import NextAuth, { NextAuthOptions, User } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GithubProvider from 'next-auth/providers/github'
+import GoogleProvider from 'next-auth/providers/google'
 import { MongoClient } from 'mongodb'
 import bcrypt from 'bcrypt'
 
@@ -27,6 +28,11 @@ export const authOptions: NextAuthOptions = {
             name: 'Github',
             clientId: process.env.GITHUB_ID,
             clientSecret: process.env.GITHUB_SECRET
+        }),
+        GoogleProvider({
+            name: 'Google',
+            clientId: process.env.GOOGLE_ID,
+            clientSecret: process.env.GOOGLE_SECRET
         })
     ],
     callbacks: {
@@ -42,8 +48,10 @@ export const authOptions: NextAuthOptions = {
         },
         async session({ session, token, user }) {
             // Send properties to the client, like an access_token and user id from a provider.
-            if (token.provider === 'github' || token.provider === 'credentials')
+            if (token.provider === 'github' || token.provider === 'google' || token.provider === 'credentials') {
                 (session as any).user_id = token.sub;
+                (session as any).provider = token.provider;
+            }
             //need to grab userid from mongodb and store
             // console.log(session, token, user)
             return session
