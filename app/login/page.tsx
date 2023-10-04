@@ -1,10 +1,10 @@
 import { _getProviders } from './actions'
 import Provider from './Provider'
-import { revalidateTag } from 'next/cache'
+import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
 
 export default async function Page() {
-    revalidateTag('/signin')
+    revalidatePath('/signin')
     const providers = await _getProviders()
     return (
         <span className='block light:bg-amber-50 dark:bg-gray-900 dark:text-gray-500 rounded-lg text-center mx-auto mt-10 px-10 py-5 min-w-[300px] max-w-[500px]'>

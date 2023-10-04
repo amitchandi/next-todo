@@ -33,7 +33,8 @@ export default function Provider({ provider }: any) {
                         focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800
                         dark:bg-gray-900 dark:hover:bg-gray-700
                         light:bg-amber-50 light:hover:bg-amber-100'
-                        onClick={(e) => submit(e)}>
+                        onClick={(e) => submit(e)}
+                    >
                         Sign in with {provider.name}
                     </button>
                 </form>
