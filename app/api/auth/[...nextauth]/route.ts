@@ -10,13 +10,12 @@ export const authOptions: NextAuthOptions = {
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                username: { label: "email", type: "email", placeholder: "jsmith@domain.com" },
-                password: { label: "Password", type: "password" }
+                email: { label: "email", type: "email", placeholder: "jsmith@domain.com" },
+                password: { label: "password", type: "password" }
             },
             authorize: async function (credentials: any) {
                 // Add logic here to look up the user from the credentials supplied
-
-                const result = await validateCredentals(credentials.username, credentials.password)
+                const result = await validateCredentals(credentials.email, credentials.password)
                 
                 if (!result)
                     return null
@@ -55,7 +54,14 @@ export const authOptions: NextAuthOptions = {
             //need to grab userid from mongodb and store
             // console.log(session, token, user)
             return session
-        }
+        },
+        async redirect({ url, baseUrl }) {
+            return '/'
+        },
+    },
+    pages: {
+        signIn: '/login',
+
     }
 }
 
@@ -68,7 +74,6 @@ async function validateCredentals(email: string, password: string): Promise<User
         const users = database.collection('users')
         const query = { email }
         const result = await users.findOne(query)
-        
         if (!result)
             return
         else {

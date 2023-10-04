@@ -11,7 +11,7 @@ import Link from 'next/link'
 
 async function getNotes() {
   'use server'
-  revalidateTag('notes')
+  revalidateTag('/')
   const client = new MongoClient(process.env.uri || 'mongodb://127.0.0.1:27017')
   const db = client.db('notes_app')
   const notes_collection =  db.collection<Note>('notes')

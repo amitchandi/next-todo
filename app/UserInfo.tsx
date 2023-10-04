@@ -16,4 +16,5 @@ export default function UserInfo() {
         </div>
       )
     }
+    return <></>
   }
