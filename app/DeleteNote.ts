@@ -3,7 +3,7 @@
 import { ObjectId, MongoClient } from 'mongodb'
 
 export async function DeleteNote(note_id: string) {
-    const client = new MongoClient(process.env.uri || 'mongodb://127.0.0.1:27017')
+    const client = new MongoClient(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017')
     const db = client.db('notes_app')
     const notes_collection =  db.collection('notes')
     

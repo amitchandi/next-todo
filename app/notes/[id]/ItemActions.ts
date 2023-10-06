@@ -6,7 +6,7 @@ import { Collection, MongoClient, ObjectId } from 'mongodb'
 type callback = (callback: Collection<any>) => Promise<void>
 
 async function runOnDB(callback: callback) {
-    const client = new MongoClient(process.env.uri || 'mongodb://127.0.0.1:27017')
+    const client = new MongoClient(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017')
     const db = client.db('notes_app')
     const notes_collection = db.collection<Note>('notes')
 
@@ -16,7 +16,7 @@ async function runOnDB(callback: callback) {
 }
 
 export async function toggleItemChecked(note_id: string, item_id: string, checked: boolean) {    
-    const client = new MongoClient(process.env.uri || 'mongodb://127.0.0.1:27017')
+    const client = new MongoClient(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017')
     const db = client.db('notes_app')
     const notes_collection = db.collection<Note>('notes')
 
@@ -29,7 +29,7 @@ export async function toggleItemChecked(note_id: string, item_id: string, checke
 }
 
 export async function addNoteItem(note_id: string) {
-    const client = new MongoClient(process.env.uri || 'mongodb://127.0.0.1:27017')
+    const client = new MongoClient(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017')
     const db = client.db('notes_app')
     const notes_collection = db.collection<Note>('notes')
 

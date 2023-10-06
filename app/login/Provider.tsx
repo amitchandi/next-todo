@@ -8,9 +8,9 @@ export default function Provider({ provider }: any) {
     let [email, setEmail] = useState('')
     let [password, setPassword] = useState('')
 
-    async function submit(e: any) {
+    async function credentialsSubmit(e: any) {
         e.preventDefault()
-        signIn('credentials', {
+        await signIn('credentials', {
             email,
             password
         })
@@ -33,7 +33,7 @@ export default function Provider({ provider }: any) {
                         focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800
                         dark:bg-gray-900 dark:hover:bg-gray-700
                         light:bg-amber-50 light:hover:bg-amber-100'
-                        onClick={(e) => submit(e)}
+                        onClick={(e) => credentialsSubmit(e)}
                     >
                         Sign in with {provider.name}
                     </button>
@@ -54,7 +54,10 @@ export default function Provider({ provider }: any) {
                 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800
                 dark:bg-gray-900 dark:hover:bg-gray-700
                 light:bg-amber-50 light:hover:bg-amber-100'
-                onClick={() => signIn(provider.id)}
+                onClick={async (e) => {
+                    e.preventDefault()
+                    await signIn(provider.id)
+                }}
             >
                 {Icon(provider.name)}
                 <span className='ml-2'>Sign in with {provider.name}</span>

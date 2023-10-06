@@ -6,7 +6,7 @@ import { authOptions } from './api/auth/[...nextauth]/route'
 import { Note, SimpleNote } from './types'
 
 export async function addNote() {
-    const client = new MongoClient(process.env.uri || 'mongodb://127.0.0.1:27017')
+    const client = new MongoClient(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017')
     const db = client.db('notes_app')
     const notes_collection =  db.collection('notes')
 
@@ -29,7 +29,7 @@ export async function addNote() {
 }
 
 export async function editNoteTitle(note_id: string, newTitle: string) {
-    const client = new MongoClient(process.env.uri || 'mongodb://127.0.0.1:27017')
+    const client = new MongoClient(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017')
     const db = client.db('notes_app')
     const notes_collection = db.collection<Note>('notes')
 

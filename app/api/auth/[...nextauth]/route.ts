@@ -56,6 +56,7 @@ export const authOptions: NextAuthOptions = {
             return session
         },
         async redirect({ url, baseUrl }) {
+            console.log(url, baseUrl)
             return '/'
         },
     },
@@ -68,7 +69,7 @@ export const authOptions: NextAuthOptions = {
 const handler = NextAuth(authOptions)
 
 async function validateCredentals(email: string, password: string): Promise<User | undefined> {
-    const client = new MongoClient(process.env.uri || 'mongodb://127.0.0.1:27017')
+    const client = new MongoClient(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017')
     try {
         const database = client.db('notes_app')
         const users = database.collection('users')
